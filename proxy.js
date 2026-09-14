@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
-import { verifyJWT } from "@/app/auth";
-import corsHeaders from "@/app/cors";
+import { verifyJWT } from "@/lib/auth";
+import corsHeaders from "@/lib/cors";
 import {
   X_HEADER_USER_EMAIL,
   X_HEADER_USER_ID,
   X_HEADER_USER_NAME,
 } from "@/app/constant";
 
-export function proxy(request) {
+export async function proxy(request) {
   const user = verifyJWT(request);
   if (!user) {
     return NextResponse.json(
