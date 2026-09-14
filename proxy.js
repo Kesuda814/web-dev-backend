@@ -7,20 +7,40 @@ import {
   X_HEADER_USER_NAME,
 } from "@/app/constant";
 
-export async function proxy(request) {
+export function proxy(request) {
+  // Allow CORS preflight requests
+  if (request.method === "OPTIONS") {
+    return new NextResponse(null, {
+      status: 204,
+      headers: corsHeaders,
+    });
+  }
+
+  // Check JWT
   const user = verifyJWT(request);
+
+  // No valid JWT
   if (!user) {
     return NextResponse.json(
       { message: "Unauthorized Request" },
-      { status: 401, headers: corsHeaders }
+      {
+        status: 401,
+        headers: corsHeaders,
+      },
     );
   }
+
+  // Add logged-in user information to request headers
   const requestHeaders = new Headers(request.headers);
+
   requestHeaders.set(X_HEADER_USER_ID, user.id);
   requestHeaders.set(X_HEADER_USER_EMAIL, user.email);
   requestHeaders.set(X_HEADER_USER_NAME, user.username);
+
   return NextResponse.next({
-    request: { headers: requestHeaders },
+    request: {
+      headers: requestHeaders,
+    },
   });
 }
 
