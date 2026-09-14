@@ -1,5 +1,5 @@
-import corsHeaders from "@/app/cors";
-import { getClientPromise } from "@/app/mongodb";
+import corsHeaders from "@/lib/cors";
+import { getClientPromise } from "@/lib/mongodb";
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { X_HEADER_USER_ID } from "@/app/constant";
